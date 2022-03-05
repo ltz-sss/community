@@ -15,6 +15,7 @@
 
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/community.css}">
 
 </head>
 <body>
@@ -55,5 +56,31 @@
         </div>
     </div>
 </nav>
+<div class="container-fluid main" style="background-color: white">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>发现</h2>
+            <hr>
+            <div class="media" th:each="question : ${questions}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-rounded"  th:src="${question.user.avatarUrl}">
+                    </a>
+                </div>
+
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${question.title}"></h4>
+                    <span th:text="${question.description}"></span>
+                    <span class="text-desc"><span th:text="${question.commentCount}"></span>个回复 ·
+                        <span th:text="${question.viewCount}"></span>次浏览 · <span th:text="${#dates.format(question.gmtCreate, 'yyyy MMMM dd')}"></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>热门话题</h3>
+
+        </div>
+    </div>
+</div>
 </body>
 </html>

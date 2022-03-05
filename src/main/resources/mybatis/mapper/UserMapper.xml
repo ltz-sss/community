@@ -9,7 +9,11 @@
         values (#{name}, #{accountId}, #{token}, #{gmtCreate}, #{gmtModified}, #{avatarUrl})
     </insert>
 
-    <select id="findByToken">
+    <select id="findByToken" resultType="User">
         select * from user where token = #{token}
+    </select>
+
+    <select id="findById" resultType="User">
+        select * from user where id=#{id}
     </select>
 </mapper>

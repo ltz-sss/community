@@ -1,14 +1,10 @@
-package life.majiang.community.model;
+package life.majiang.community.dto;
 
-import lombok.AllArgsConstructor;
+import life.majiang.community.model.User;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Question {
+public class QuestionDto {
     private int id;
     private String title;
     private String description;
@@ -19,4 +15,5 @@ public class Question {
     private Integer commentCount;
     private Integer viewCount;
     private Integer likeCount;
+    private User user;
 }

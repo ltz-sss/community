@@ -1,3 +1,13 @@
 .main {
     margin: 30px;
 }
+.media-object{
+    height: 38px;
+    width: 38px;
+    border-radius: 5px;
+}
+.text-desc{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
