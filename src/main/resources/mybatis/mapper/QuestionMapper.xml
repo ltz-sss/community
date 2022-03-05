@@ -16,4 +16,12 @@
     <select id="count" resultType="int" >
         select count(1) from question
     </select>
+
+    <select id="listByUserId" resultType="Question">
+        select * from question where creator=#{userId} limit #{offset}, #{size}
+    </select>
+
+    <select id="countByUserId" resultType="int" >
+        select count(1) from question where creator=#{userId}
+    </select>
 </mapper>

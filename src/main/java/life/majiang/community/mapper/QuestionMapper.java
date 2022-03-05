@@ -14,4 +14,8 @@ public interface QuestionMapper {
     void create(Question question);
     List<Question> list(@Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
     Integer count();
+
+    List<Question> listByUserId(@Param(value = "userId") Integer userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
+
+    Integer countByUserId(@Param("userId") Integer userId);
 }

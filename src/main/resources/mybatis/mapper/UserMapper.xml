@@ -16,4 +16,5 @@
     <select id="findById" resultType="User">
         select * from user where id=#{id}
     </select>
+
 </mapper>
