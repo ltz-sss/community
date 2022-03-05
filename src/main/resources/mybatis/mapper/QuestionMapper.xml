@@ -10,6 +10,10 @@
     </insert>
 
     <select id="list" resultType="Question">
-        select * from question;
+        select * from question limit #{offset}, #{size};
+    </select>
+
+    <select id="count" resultType="int" >
+        select count(1) from question
     </select>
 </mapper>
