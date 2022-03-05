@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="life.majiang.community.mapper.UserMapper">
+    <insert id="insert" parameterType="User">
+        insert into user (name, account_ID, token, gmt_create, gmt_modified, avatar_url)
+        values (#{name}, #{accountId}, #{token}, #{gmtCreate}, #{gmtModified}, #{avatarUrl})
+    </insert>
+
+    <select id="findByToken">
+        select * from user where token = #{token}
+    </select>
+</mapper>
