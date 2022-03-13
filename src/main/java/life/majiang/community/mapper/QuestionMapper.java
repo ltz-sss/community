@@ -18,4 +18,11 @@ public interface QuestionMapper {
     List<Question> listByUserId(@Param(value = "userId") Integer userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
 
     Integer countByUserId(@Param("userId") Integer userId);
+
+    Question getById(@Param(value = "id") Integer id);
+
+
+    void update(Question question);
+
+    void updateViewById(@Param("id") Integer id);
 }

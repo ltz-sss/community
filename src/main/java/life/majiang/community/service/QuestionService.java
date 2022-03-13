@@ -2,6 +2,8 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.PaginationDTO;
 import life.majiang.community.dto.QuestionDto;
+import life.majiang.community.exception.CustomizeErrorCode;
+import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Question;
@@ -82,5 +84,34 @@ public class QuestionService {
         paginationDTO.setPagination(totalCount,page,size);
 
         return paginationDTO;
+    }
+
+    public QuestionDto getById(Integer id) {
+        Question question = questionMapper.getById(id);
+        if(question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+        QuestionDto questionDto = new QuestionDto();
+        BeanUtils.copyProperties(question, questionDto);
+        questionDto.setUser(userMapper.findById(question.getCreator()));
+
+        return questionDto;
+    }
+
+    public void createOrUpdate(Question question) {
+        if(question.getId() == null) {
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.create(question);
+        }else {
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.update(question);
+
+        }
+    }
+
+    public void incView(Integer id) {  //在questionController调用此方法，每次访问一次controller就加一次
+        Question question = questionMapper.getById(id);
+        questionMapper.updateViewById(id);
     }
 }

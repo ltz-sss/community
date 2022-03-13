@@ -24,4 +24,20 @@
     <select id="countByUserId" resultType="int" >
         select count(1) from question where creator=#{userId}
     </select>
+
+    <select id="getById" resultType="Question">
+        select * from question where id = #{id}
+    </select>
+
+    <update id="update" parameterType="Question">
+        update question set
+        title=#{title}, description=#{description}, gmt_modified=#{gmtModified},tag = #{tag}
+        where id=#{id}
+    </update>
+
+    <update id="updateViewById" >
+        update question set
+        view_count = view_count + 1 where id=#{id}
+    </update>
+
 </mapper>

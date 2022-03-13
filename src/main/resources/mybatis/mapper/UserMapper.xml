@@ -17,4 +17,13 @@
         select * from user where id=#{id}
     </select>
 
+    <select id="findByAccountId" resultType="User">
+        select * from user where account_id=#{accountId}
+    </select>
+
+    <update id="update" parameterType="User">
+        update user set
+        gmt_modified = #{gmtModified}, avatar_url = #{avatarUrl}, name = #{name}, token = #{token}
+        where id = #{id}
+    </update>
 </mapper>

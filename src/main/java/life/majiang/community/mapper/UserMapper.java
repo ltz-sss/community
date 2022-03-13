@@ -14,4 +14,9 @@ public interface UserMapper {
      User findByToken(@Param("token") String token);
 
     User findById(@Param("id") Integer id);
+
+
+    User findByAccountId(@Param("accountId") String accountId);
+
+    void update(User dbUser);
 }

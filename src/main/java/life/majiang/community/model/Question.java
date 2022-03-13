@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Question {
-    private int id;
+    private Integer id;
     private String title;
     private String description;
     private String tag;
