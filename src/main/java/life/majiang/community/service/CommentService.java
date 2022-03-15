@@ -2,13 +2,18 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.CommentDTO;
 import life.majiang.community.enums.CommentTypeEnum;
+import life.majiang.community.enums.NotificationTypeEnum;
+import life.majiang.community.enums.NotificationStatusEnum;
 import life.majiang.community.exception.CustomizeErrorCode;
 import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.mapper.CommentMapper;
+import life.majiang.community.mapper.NotificationMapper;
 import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Comment;
+import life.majiang.community.model.Notification;
 import life.majiang.community.model.Question;
+import life.majiang.community.model.User;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +30,10 @@ public class CommentService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if(comment.getParentId() == null || comment.getParentId() == 0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -41,6 +48,19 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+
+            //创建通知
+            Notification notification = new Notification();
+            notification.setGmtCreate(System.currentTimeMillis());
+            notification.setType(NotificationTypeEnum.REPLY_COMMENT.getType());
+            notification.setOuterid(comment.getParentId());   //回复的是谁  questionId = comment.getParentId()
+            notification.setNotifier(comment.getCommentator());
+            notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+            notification.setReceiver(dbComment.getCommentator());
+            notification.setNotifierName(commentator.getName());
+            notification.setOuterTitle(comment.getContent());
+
+            notificationMapper.insert(notification);
         }else{
             //回复问题
             Question question = questionMapper.getById(comment.getParentId());
@@ -49,7 +69,19 @@ public class CommentService {
             }
             commentMapper.insert(comment);
             question.setCommentCount(1);
-            questionMapper.incCommentCount(question);
+            questionMapper.incCommentCount(question);   //问题评论数加一
+
+            //创建通知
+            Notification notification = new Notification();
+            notification.setGmtCreate(System.currentTimeMillis());
+            notification.setType(NotificationTypeEnum.REPLY_QUESTION.getType());
+            notification.setOuterid(comment.getParentId());   //回复的是谁  questionId = comment.getParentId()
+            notification.setNotifier(comment.getCommentator());
+            notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+            notification.setReceiver(question.getCreator());
+            notification.setNotifierName(commentator.getName());
+            notification.setOuterTitle(question.getTitle());
+            notificationMapper.insert(notification);
         }
     }
 

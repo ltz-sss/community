@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="life.majiang.community.mapper.NotificationMapper">
+    <insert id="insert">
+        insert into NOTIFICATION(notifier, receiver, outerid, type, gmt_create, STATUS, NOTIFIER_NAME, OUTER_TITLE)
+        values ( #{notifier}, #{receiver}, #{outerid}, #{type}, #{gmtCreate}, #{status}, #{notifierName}, #{outerTitle})
+    </insert>
+
+    <select id="countByUserId" resultType="int">
+        select count(1) from NOTIFICATION where RECEIVER = #{id}
+    </select>
+
+    <select id="listByUserId" resultType="Notification">
+        select * from NOTIFICATION where RECEIVER = #{id}
+        order by GMT_CREATE desc
+        limit #{offset}, #{size}
+    </select>
+
+    <select id="countUnreadByUserId" resultType="java.lang.Long">
+        select count(1) from NOTIFICATION where RECEIVER = #{userId} and STATUS = 0
+    </select>
+    <select id="getById" resultType="Notification">
+        select * from NOTIFICATION where ID = #{id}
+    </select>
+
+    <update id="updateStatusById">
+        update NOTIFICATION set STATUS = 1 where id = #{id};
+    </update>
+</mapper>

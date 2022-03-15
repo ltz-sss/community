@@ -11,7 +11,6 @@ import life.majiang.community.model.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -51,12 +50,12 @@ public class QuestionService {
             questionDtoList.add(questionDto);
         }
 
-        paginationDTO.setQuestions(questionDtoList);
+        paginationDTO.setData(questionDtoList);
         paginationDTO.setPagination(totalCount,page,size);
 
         return paginationDTO;
     }
-    public PaginationDTO list(Long userId, Integer page, Integer size) {
+    public PaginationDTO<QuestionDto> list(Long userId, Integer page, Integer size) {
         Integer totalCount = questionMapper.countByUserId(userId);
         Integer totalpage;
         if(totalCount % size == 0){
@@ -73,7 +72,7 @@ public class QuestionService {
 
         List<Question> questions = questionMapper.listByUserId(userId, offset, size);
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDto> paginationDTO = new PaginationDTO<>();
 
         for (Question question : questions) {
             User user  = userMapper.findById(question.getCreator());
@@ -83,7 +82,7 @@ public class QuestionService {
             questionDtoList.add(questionDto);
         }
 
-        paginationDTO.setQuestions(questionDtoList);
+        paginationDTO.setData(questionDtoList);
         paginationDTO.setPagination(totalCount,page,size);
 
         return paginationDTO;
