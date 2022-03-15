@@ -17,7 +17,7 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" th:href="@{/css/community.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{js/jquery-3.4.1.min.js}">
+    <link rel="stylesheet" type="text/css" th:href="@{js/jquery-3.4.1.js}">
 
 </head>
 <body>
@@ -36,9 +36,17 @@
 
                 <div class="media-body">
                     <h4 class="media-heading" th:text="${question.title}"></h4>
-
-                    <span class="text-desc"><span th:text="${question.commentCount}"></span>个回复 ·
-                        <span th:text="${question.viewCount}"></span>次浏览 · <span th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span></span>
+                    <span class="text-desc">
+                        <span th:text="${question.commentCount}"></span>个回复 ·
+                        <span th:text="${question.viewCount}"></span>次浏览 ·
+                        <span th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span> ·
+                        <span>
+                            <a th:href="@{'/publish/' + ${question.id}}" class="text-desc pull-left"
+                               th:if="${session.user != null && session.user.id == question.creator}" >
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true" style="margin-bottom: 15px"></span>编辑
+                            </a>
+                        </span>
+                    </span>
                 </div>
             </div>
             <nav aria-label="Page navigation">

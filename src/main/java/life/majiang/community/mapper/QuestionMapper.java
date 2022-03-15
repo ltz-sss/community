@@ -15,14 +15,18 @@ public interface QuestionMapper {
     List<Question> list(@Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
     Integer count();
 
-    List<Question> listByUserId(@Param(value = "userId") Integer userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
+    List<Question> listByUserId(@Param(value = "userId") Long userId, @Param(value = "offset") Integer offset, @Param(value = "size") Integer size);
 
-    Integer countByUserId(@Param("userId") Integer userId);
+    Integer countByUserId(@Param("userId") Long userId);
 
-    Question getById(@Param(value = "id") Integer id);
+    Question getById(@Param(value = "id") Long id);
 
 
     void update(Question question);
 
-    void updateViewById(@Param("id") Integer id);
+    void updateViewById(@Param("id") Long id);
+
+    int incCommentCount(Question question);
+
+    List<Question> selectRelated(Question question);
 }

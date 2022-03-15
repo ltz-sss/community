@@ -10,7 +10,10 @@
     </insert>
 
     <select id="list" resultType="Question">
-        select * from question limit #{offset}, #{size};
+        select * from question
+        order by GMT_CREATE desc
+        limit #{offset}, #{size}
+
     </select>
 
     <select id="count" resultType="int" >
@@ -39,5 +42,15 @@
         update question set
         view_count = view_count + 1 where id=#{id}
     </update>
+
+    <update id="incCommentCount">
+        update question set
+        COMMENT_COUNT = COMMENT_COUNT + #{commentCount, jdbcType=INTEGER} where id=#{id}
+    </update>
+
+    <select id="selectRelated" resultType="Question">
+        select * from QUESTION
+        where id != #{id} and tag regexp #{tag}
+    </select>
 
 </mapper>

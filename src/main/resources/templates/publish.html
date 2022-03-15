@@ -8,17 +8,15 @@
 <!--    <script src="js/bootstrap.min.js"></script>-->
     <!--    <link rel="stylesheet" href="css/bootstrap-theme.min.css">-->
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
-    <script type="text/javascript" th:src="@{js/jquery-3.4.1.min.js}"></script>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
 
-    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
-
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-<!--    <link rel="stylesheet" href="../static/css/community.css">-->
     <link rel="stylesheet" type="text/css" th:href="@{/css/community.css}">
 
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.js}"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+    <script type="text/javascript" th:src="@{/js/community.js}"></script>
 </head>
 <body>
 
@@ -32,15 +30,36 @@
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）</label>
-                    <input type="text" th:value="${title}" class="form-control" id="title" name="title" placeholder="问题标题...">
+                    <input type="text" th:value="${title}" class="form-control" id="title" name="title" autocomplete="off" placeholder="问题标题...">
                 </div>
                 <div class="form-group">
                     <label for="description">问题补充（必填，请参照右侧提示）：</label>
                     <textarea name="description" th:text="${description}" id="description" class="form-control" cols="30" rows="10"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="tag ">添加标签</label>
-                    <input type="text" th:value="${tag}" class="form-control" id="tag" name="tag" placeholder="输入标签，以逗号分隔开">
+                    <label for="tag">添加标签</label>
+                    <input type="text" th:value="${tag}" class="form-control" id="tag" name="tag" autocomplete="off"
+                           placeholder="输入标签，以逗号分隔开" onclick="showSelectTag()">
+                    <div id="select-tag" class="publish-tag-tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" th:each="selectCategory, selectCategoryStat:${tags}" th:class="${selectCategoryStat.first ? 'active' : ''}">
+                                <a th:href="'#'+${selectCategory.categoryName}" aria-controls="home" role="tab"
+                                   data-toggle="tab" th:text="${selectCategory.categoryName}"></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" th:id="${selectCategory.categoryName}"
+                                 th:each="selectCategory:${tags}"
+                                 th:class="${selectCategoryStat.first ? 'active tab-pane' : 'tab-pane'}">
+
+                                <span class="label label-info" th:each="Tag:${selectCategory.tags}" style="margin-right: 10px">
+                                    <span class="glyphicon glyphicon-tags" onclick="selectTag(this)"
+                                        th:data-tag="${Tag}"
+                                        th:text="${' ' + Tag}"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="alert alert-warning" th:text="${error}" th:if="${error !=null }"></div>
 

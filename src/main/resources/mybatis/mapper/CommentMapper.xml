@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace=绑定一个对应的Dao/Mapper接口-->
+<mapper namespace="life.majiang.community.mapper.CommentMapper">
+    <insert id="insert" parameterType="Comment">
+        insert into COMMENT ( PARENT_ID, TYPE, COMMENTATOR, GMT_CREATE, GMT_MODIFIED, LIKE_COUNT, CONTENT )
+        values ( #{parentId}, #{type}, #{commentator}, #{gmtCreate}, #{gmtModified}, #{likeCount}, #{content} )
+    </insert>
+
+    <select id="selectByPrimaryKey" resultType="Comment">
+        select * from COMMENT where ID = #{parentId}
+    </select>
+
+    <select id="selectByQuestionId" resultType="Comment">
+        select * from COMMENT where PARENT_ID = #{id} and TYPE = 1
+    </select>
+
+    <select id="selectByTargetId" resultType="Comment">
+        select * from COMMENT where PARENT_ID = #{id} and TYPE = 2
+    </select>
+
+</mapper>

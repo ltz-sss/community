@@ -13,7 +13,7 @@ public interface UserMapper {
      void insert(User user);
      User findByToken(@Param("token") String token);
 
-    User findById(@Param("id") Integer id);
+    User findById(@Param("id") Long id);
 
 
     User findByAccountId(@Param("accountId") String accountId);

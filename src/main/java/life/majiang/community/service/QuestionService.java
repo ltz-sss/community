@@ -8,13 +8,16 @@ import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.Question;
 import life.majiang.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -53,7 +56,7 @@ public class QuestionService {
 
         return paginationDTO;
     }
-    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
         Integer totalCount = questionMapper.countByUserId(userId);
         Integer totalpage;
         if(totalCount % size == 0){
@@ -86,7 +89,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDto getById(Integer id) {
+    public QuestionDto getById(Long id) {
         Question question = questionMapper.getById(id);
         if(question == null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -102,6 +105,8 @@ public class QuestionService {
         if(question.getId() == null) {
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setCommentCount(0);
+            question.setLikeCount(0);
             questionMapper.create(question);
         }else {
             question.setGmtModified(System.currentTimeMillis());
@@ -110,8 +115,27 @@ public class QuestionService {
         }
     }
 
-    public void incView(Integer id) {  //在questionController调用此方法，每次访问一次controller就加一次
+    public void incView(Long id) {  //在questionController调用此方法，每次访问一次controller就加一次
         Question question = questionMapper.getById(id);
         questionMapper.updateViewById(id);
+    }
+
+    public List<QuestionDto> selectRelated(QuestionDto queryDTO) {
+        if(StringUtils.isBlank(queryDTO.getTag())){
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(queryDTO.getTag(), ",");
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
+        Question question = new Question();
+        question.setId(queryDTO.getId());
+        question.setTag(regexpTag);
+        List<Question> questions = questionMapper.selectRelated(question);
+        List<QuestionDto> collect = questions.stream().map(q -> {
+            QuestionDto questionDto = new QuestionDto();
+            BeanUtils.copyProperties(q, questionDto);
+            return questionDto;
+        }).collect(Collectors.toList());
+
+        return collect;
     }
 }
