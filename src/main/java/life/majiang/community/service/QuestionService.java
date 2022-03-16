@@ -46,7 +46,9 @@ public class QuestionService {
         }
         page = page < 1 ? 1 : page;
         page = page > totalpage ? totalpage : page;
-
+        if(page == 0){
+            page++;
+        }
         Integer offset = (page - 1) * size;
         List<QuestionDto> questionDtoList = new ArrayList<>();
 
@@ -80,7 +82,9 @@ public class QuestionService {
         }
         page = page < 1 ? 1 : page;
         page = page > totalpage ? totalpage : page;
-
+        if(page == 0){
+            page++;
+        }
         Integer offset = (page - 1) * size;
 
         List<QuestionDto> questionDtoList = new ArrayList<>();
@@ -110,8 +114,8 @@ public class QuestionService {
         }
         QuestionDto questionDto = new QuestionDto();
         BeanUtils.copyProperties(question, questionDto);
-        questionDto.setUser(userMapper.findById(question.getCreator()));
 
+        questionDto.setUser(userMapper.findById(question.getCreator()));
         return questionDto;
     }
 

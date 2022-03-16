@@ -13,7 +13,7 @@ class CommunityApplicationTests {
     @Test
     void contextLoads() {
         User user = new User();
-        user.setName("12");
+        user.setName("刘同壮");
         userMapper.insert(user);
     }
 

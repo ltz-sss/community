@@ -33,6 +33,9 @@ public class NotificationService {
         }
         page = page < 1 ? 1 : page;
         page = page > totalpage ? totalpage : page;
+        if(page == 0){
+            page++;
+        }
         Integer offset = (page - 1) * size;
 
 
