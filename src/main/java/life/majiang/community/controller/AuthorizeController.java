@@ -53,7 +53,7 @@ public class AuthorizeController {
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setAvatarUrl(githubUser.getAvatarUrl());
-            userService.createOrUpdate(user);
+            userService.createOrUpdate(user);      //通过AccountId来判断数据库中有没有当前user, 有的话就更新，没有就插入
             response.addCookie(new Cookie("token", token));
             return "redirect:/";
         }else{

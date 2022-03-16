@@ -70,18 +70,20 @@ public class CommentService {
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionMapper.incCommentCount(question);   //问题评论数加一
+            if(question.getCreator() != comment.getCommentator()){
+                //创建通知
+                Notification notification = new Notification();
+                notification.setGmtCreate(System.currentTimeMillis());
+                notification.setType(NotificationTypeEnum.REPLY_QUESTION.getType());
+                notification.setOuterid(comment.getParentId());   //回复的是谁  questionId = comment.getParentId()
+                notification.setNotifier(comment.getCommentator());
+                notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+                notification.setReceiver(question.getCreator());
+                notification.setNotifierName(commentator.getName());
+                notification.setOuterTitle(question.getTitle());
+                notificationMapper.insert(notification);
+            }
 
-            //创建通知
-            Notification notification = new Notification();
-            notification.setGmtCreate(System.currentTimeMillis());
-            notification.setType(NotificationTypeEnum.REPLY_QUESTION.getType());
-            notification.setOuterid(comment.getParentId());   //回复的是谁  questionId = comment.getParentId()
-            notification.setNotifier(comment.getCommentator());
-            notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
-            notification.setReceiver(question.getCreator());
-            notification.setNotifierName(commentator.getName());
-            notification.setOuterTitle(question.getTitle());
-            notificationMapper.insert(notification);
         }
     }
 

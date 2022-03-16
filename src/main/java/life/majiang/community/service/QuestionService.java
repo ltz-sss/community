@@ -2,6 +2,7 @@ package life.majiang.community.service;
 
 import life.majiang.community.dto.PaginationDTO;
 import life.majiang.community.dto.QuestionDto;
+import life.majiang.community.dto.QuestionQueryDTO;
 import life.majiang.community.exception.CustomizeErrorCode;
 import life.majiang.community.exception.CustomizeException;
 import life.majiang.community.mapper.QuestionMapper;
@@ -24,8 +25,19 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
-    public PaginationDTO list(Integer page, Integer size) {
-        Integer totalCount = questionMapper.count();
+    public PaginationDTO<QuestionDto> list(String search, Integer page, Integer size) {
+
+        if(StringUtils.isNotBlank(search)){
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
+        //Integer totalCount = questionMapper.count();
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionMapper.countBySearch(questionQueryDTO);
+
+
         Integer totalpage;
         if(totalCount % size == 0){
             totalpage = totalCount / size;
@@ -38,9 +50,12 @@ public class QuestionService {
         Integer offset = (page - 1) * size;
         List<QuestionDto> questionDtoList = new ArrayList<>();
 
-        List<Question> questions = questionMapper.list(offset, size);
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+        List<Question> questions = questionMapper.selectBySearch(questionQueryDTO); //通过search来查询question
+
+        PaginationDTO<QuestionDto> paginationDTO = new PaginationDTO<>();
 
         for (Question question : questions) {
             User user  = userMapper.findById(question.getCreator());
@@ -55,7 +70,7 @@ public class QuestionService {
 
         return paginationDTO;
     }
-    public PaginationDTO<QuestionDto> list(Long userId, Integer page, Integer size) {
+    public PaginationDTO<QuestionDto> list(Long userId, Integer page, Integer size) {  //查询当前用户的所有提问(question)
         Integer totalCount = questionMapper.countByUserId(userId);
         Integer totalpage;
         if(totalCount % size == 0){

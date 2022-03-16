@@ -10,13 +10,17 @@
 
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" th:href="@{/css/community.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/editormd.preview.min.css}">
+
 
     <script type="text/javascript" th:src="@{/js/jquery-3.4.1.js}"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <script type="text/javascript" th:src="@{/js/community.js}"></script>
+    <script type="text/javascript" th:src="@{/js/editormd.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/lib/marked.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/lib/prettify.min.js}"></script>
 
 </head>
 <body>
@@ -35,8 +39,15 @@
                 </span>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <!--                内容-->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:text="${question.description}">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
+                    <textarea style="display: none" th:text="${question.description}"></textarea>
                 </div>
+                <script type="text/javascript">
+                    $(function (){
+                        editormd.markdownToHTML("question-view",{});
+                    });
+                </script>
+
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 <!--                标签-->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -125,12 +136,13 @@
                     <div class="media">
                         <div class="media-left">
                             <a href="#">
-                                <img class="media-object img-rounded"  th:src="${question.user.avatarUrl}">
+                                <img class="media-object img-rounded"
+                                     th:src="${session.user != null ? session.user.avatarUrl : '../images/default-avatar.png'}">
                             </a>
                         </div>
                         <div class="media-body" style="padding: 10px">
                             <h4 class="media-heading">
-                                <span th:text="${question.user.name}"></span>
+                                <span th:text="${session.user != null ? session.user.name : '匿名用户'}"></span>
                             </h4>
                         </div>
                     </div>
@@ -159,10 +171,7 @@
             </div>
 <!--            微信号-->
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h4>站长微信</h4>
-                <img src="/img/wechat.jpg" style="height: 220px">
-            </div>
+
 
 <!--        相关问题-->
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -177,5 +186,6 @@
         </div>
     </div>
 </div>
+<div th:insert="~{footer::foot}"></div>
 </body>
 </html>

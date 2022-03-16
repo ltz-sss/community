@@ -10,7 +10,6 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-
     public void createOrUpdate(User user) {
         User dbUser = userMapper.findByAccountId(user.getAccountId());
         if(dbUser == null){
